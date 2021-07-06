@@ -1,0 +1,80 @@
+﻿@model List<Librery.Models.editoriales>
+@{
+    ViewBag.Title = "Lista ";
+}
+
+<h2 class="text-center text-success">Listado de Editoriales</h2>
+<div class="well well-sm">
+    <a class="btn btn-primary" title="Agregar" href="~/Home/Registro">  <span class="fa fa-user"></span> Nuevo</a>
+
+</div>
+<table class="table table-hover table-striped">
+    <thead>
+        <tr class="bg-primary">
+            <th>Código</th>
+            <th>Nombre</th>
+
+            <th colspan="3">Operaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lista in Model)
+        {
+            <tr>
+                <td>@lista.codigo</td>
+                <td>@lista.nombre</td>
+                <td>
+                    @*<a class="btn btn-danger" href="~/Home/Eliminar/@lista.codigo" title="Eliminar"><span class="fa fa-book"></span></a>*@
+                    <a class="btn btn-danger" onclick="Eliminareditorial(@lista.codigo)" title="Eliminar"><span class="fa fa-book"></span></a>
+
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+
+</table>
+<div class="text-primary text-danger text-center">
+    @ViewBag.MensajeError;
+</div>
+
+
+
+    <script>
+        function Eliminareditorial(id) {
+
+            $.confirm({
+
+                title: 'Eliminar editorial!',
+                content: '¿Estás seguro de Eliminar este Empleado?',
+
+                buttons: {
+                    Confirmar: function () {
+                      //  LoadingOverlayShow("#tableDemo");
+                        $.ajax({
+                            url: "/Home/Eliminar",
+                            type: "post",
+                            data: { id }
+                        }).done(function (response) { //
+                            console.log(response);
+                           // LoadingOverlayHide("#tableDemo");
+                            if (response.ok) {
+                                alert("Empleado Eliminado correctamente.");
+                                window.location = response.toRedirect;
+                            }
+                            else {
+                                alert(response.msg);
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                          //  LoadingOverlayHide("#tableDemo");
+                            alert(textStatus);
+                        });
+                    },
+                    Cancelar: function () {
+                        //$.alert('Canceled!');
+                    },
+                }
+            });
+        }
+    </script>
